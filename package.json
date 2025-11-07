@@ -1,0 +1,29 @@
+{
+  "name": "express-api-crud-relationship",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/StefaniaSgreva/express-api-crud-relationship#readme",
+  "bugs": {
+    "url": "https://github.com/StefaniaSgreva/express-api-crud-relationship/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/StefaniaSgreva/express-api-crud-relationship.git"
+  },
+  "license": "ISC",
+  "author": "Stefania Sgreva",
+  "type": "commonjs",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.0",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10",
+    "prisma": "^6.19.0"
+  }
+}
