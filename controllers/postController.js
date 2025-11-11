@@ -1,7 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const NotFoundException = require("../exceptions/NotFoundException");
-const ValidationError = require("../exceptions/ValidationError");
 
 // Recupera tutti i post (con filtri opzionali) e paginazione + (con categoria e tag)
 async function index(req, res, next) {

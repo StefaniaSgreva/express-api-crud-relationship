@@ -3,8 +3,7 @@ const router = express.Router();
 const postController = require('../controllers/postController');
 // validazione
 const { body, validationResult } = require('express-validator');
-const validationMiddleware = require('./path/to/validationMiddleware');
-
+const validationMiddleware = require('../middlewares/validationMiddleware');
 
 // GET /posts
 // // Recupera tutti i post con eventuali filtri
