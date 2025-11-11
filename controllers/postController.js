@@ -86,7 +86,7 @@ async function update(req, res, next) {
         });
 
         return res.json(updatedPost);
-  } catch (er) {
+  } catch (err) {
         next(err);
   }
 }
