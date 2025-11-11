@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 const NotFoundException = require("../exceptions/NotFoundException");
 const ValidationError = require("../exceptions/ValidationError");
 
-// Recupera tutti i post (con filtri opzionali) e paginazione
+// Recupera tutti i post (con filtri opzionali) e paginazione + (con categoria e tag)
 async function index(req, res, next) {
     const { published, search, page = 1, limit = 10 } = req.query;
     // Calcola quanti record saltare
@@ -29,6 +29,11 @@ async function index(req, res, next) {
             skip: parseInt(skip),
             take: parseInt(limit),
             orderBy: {createdAt: 'desc'},
+            include: {           // Include category e tags
+              category: true,
+              tags: true
+            }
+
     });
 
     // Conta il totale dei post che rispettano il filtro
@@ -46,10 +51,16 @@ async function index(req, res, next) {
   }
 }
 
-// Recupera un post tramite slug
+// Recupera un post tramite slug (con categoria e tag)
 async function show(req, res, next) {
   try {
-    const post = await prisma.post.findUnique({ where: { slug: req.params.slug } });
+    const post = await prisma.post.findUnique({ 
+        where: { slug: req.params.slug },
+        include: {
+          category: true,
+          tags: true
+        }
+     });
     if (!post) throw new NotFoundException();
 
     res.json(post);
