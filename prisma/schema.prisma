@@ -17,10 +17,37 @@ datasource db {
 model Post {
   id        Int      @id @default(autoincrement())
   title     String   @db.VarChar(100)
-  slug      String   @db.VarChar(255) @unique
-  image     String?  @db.VarChar(255)  // Optional field for image URL/path
+  slug      String   @unique @db.VarChar(255)
+  image     String?  @db.VarChar(255) // Optional field for image URL/path
   content   String   @db.Text
   published Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  // Relazione one-to-many con Category (opzionale)
+  category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId Int?
+
+  // Relazione many-to-many con Tag
+  tags Tag[] // array di tag
+}
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique @db.VarChar(50)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relazione one-to-many con Post
+  posts Post[]
+}
+
+model Tag {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique @db.VarChar(50)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relazione many-to-many con Post
+  posts Post[]
 }
