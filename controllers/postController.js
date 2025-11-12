@@ -104,15 +104,26 @@ async function update(req, res, next) {
 // Elimina un post tramite slug
 async function destroy(req, res, next) {
   try {
-        const slug = req.params.slug;
+    const slug = req.params.slug;
 
-        const post = await prisma.post.findUnique({ where: { slug } });
-        if (!post) throw new NotFoundException();
+    const post = await prisma.post.findUnique({
+      where: { slug },
+      include: { tags: true } // carichiamo i tag associati
+    });
+    if (!post) throw new NotFoundException();
 
-        await prisma.post.delete({ where: { slug } });
-        res.status(204).send();
+    // Rimuoviamo tutte le relazioni many-to-many con i tag
+    await prisma.post.update({
+      where: { slug },
+      data: { tags: { set: [] } } 
+    });
+
+    // Ora eliminiamo il post in modo sicuro
+    await prisma.post.delete({ where: { slug } });
+
+    res.status(204).send();
   } catch (err) {
-        next(err);
+    next(err);
   }
 }
 
