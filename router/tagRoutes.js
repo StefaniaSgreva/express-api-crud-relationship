@@ -14,7 +14,7 @@ router.get('/tags/:id', tagController.show);
 router.post(
   '/tags', 
   body('name')
-    .notEmpty().withMessage('Il nome è obbligatorio')
+    .notEmpty({ ignore_whitespace: true }).withMessage('Il nome è obbligatorio')
     .isLength({ max: 50 }).withMessage('Il nome può contenere massimo 50 caratteri'),
   validationMiddleware,
   tagController.store
@@ -25,7 +25,7 @@ router.put(
   '/tags/:id',
   body('name')
     .optional()
-    .notEmpty().withMessage('Il nome è obbligatorio se fornito')
+    .notEmpty({ ignore_whitespace: true }).withMessage('Il nome è obbligatorio se fornito')
     .isLength({ max: 50 }).withMessage('Il nome può contenere massimo 50 caratteri'),
   validationMiddleware,
   tagController.update

@@ -19,13 +19,13 @@ router.get('/posts/:slug', postController.show);
 router.post(
     '/posts', 
     body("title")
-        .notEmpty().withMessage('Il titolo è obbligatorio')
+        .notEmpty({ ignore_whitespace: true }).withMessage('Il titolo è obbligatorio')
         .isLength({ max: 100 }).withMessage('Il titolo deve contenere massimo 100 caratteri'),
     body('slug')
-        .notEmpty().withMessage('Lo slug è obbligatorio')
+        .notEmpty({ ignore_whitespace: true }).withMessage('Lo slug è obbligatorio')
         .isSlug().withMessage('Lo Slug deve essere uno slug valido'),    
     body('content')
-        .notEmpty().withMessage('Il contenuto è obbligatorio'),
+        .notEmpty({ ignore_whitespace: true }).withMessage('Il contenuto è obbligatorio'),
     body('categoryId')
         .optional()
         .isInt().withMessage('Category ID deve essere un numero intero'),
@@ -43,15 +43,15 @@ router.put(
     '/posts/:slug',
     body("title")
         .optional()
-        .notEmpty().withMessage('Il titolo è obbligatorio se fornito')
+        .notEmpty({ ignore_whitespace: true }).withMessage('Il titolo è obbligatorio se fornito')
         .isLength({ max: 100 }).withMessage('Il titolo deve contenere massimo 100 caratteri'),
     body('slug')
         .optional()
-        .notEmpty().withMessage('Lo slug è obbligatorio se fornito')
+        .notEmpty({ ignore_whitespace: true }).withMessage('Lo slug è obbligatorio se fornito')
         .isSlug().withMessage('Lo Slug deve essere uno slug valido'),
     body('content')
         .optional()
-        .notEmpty().withMessage('Il contenuto è obbligatorio se fornito'),
+        .notEmpty({ ignore_whitespace: true }).withMessage('Il contenuto è obbligatorio se fornito'),
     body('categoryId')
         .optional()
         .isInt().withMessage('Category ID deve essere un numero intero'),
