@@ -3,8 +3,11 @@ const router = express.Router();
 const postController = require('../controllers/postController');
 // validazione
 const { body, validationResult, checkSchema } = require('express-validator');
-const validationMiddleware = require('../middlewares/validationMiddleware');
+const validationMiddleware = require('../middleware/validationMiddleware');
 const postCreate = require('../validations/postCreate');
+// autenticazione JWT
+const authenticateJWT = require('../middleware/authenticateJWT');
+const checkRole = require('../middleware/authRoleHandler');
 
 // GET /posts
 // // Recupera tutti i post con eventuali filtri
@@ -36,13 +39,15 @@ router.get('/posts/:slug', postController.show);
 //     validationMiddleware,
 //     postController.store
 // );
-router.post("/posts", checkSchema(postCreate), postController.store);
+router.post("/posts",  authenticateJWT, checkRole('admin'), checkSchema(postCreate), postController.store);
 
 // PUT /posts/:slug
 // Aggiorna un post tramite slug
 // router.put('/posts/:slug', postController.update);
 router.put(
     '/posts/:slug',
+     authenticateJWT,
+     checkRole(['admin', 'editor']), // Permetti l'accesso a utenti con ruolo 'admin' oppure 'editor'
     body("title")
         .optional()
         .notEmpty({ ignore_whitespace: true }).withMessage('Il titolo è obbligatorio se fornito')
@@ -67,6 +72,6 @@ router.put(
 
 // DELETE /posts/:slug
 // Elimina un post tramite slug
-router.delete('/posts/:slug', postController.destroy);
+router.delete('/posts/:slug',  authenticateJWT, checkRole('admin'), postController.destroy);
 
 module.exports = router;

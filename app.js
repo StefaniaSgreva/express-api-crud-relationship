@@ -6,10 +6,12 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 const postRoutes = require('./routes/postRoutes');
-const routeNotFound = require('./middleware/routeNotFound');
-const errorsHandler = require('./middleware/errorsHandler');
 const categoryRoutes = require('./routes/categoryRoutes');
 const tagRoutes = require('./routes/tagRoutes');
+const authRoutes = require('./routes/authRoutes');
+
+const routeNotFound = require('./middleware/routeNotFound');
+const errorsHandler = require('./middleware/errorsHandler');
 
 // application/json
 app.use(express.json());
@@ -20,6 +22,8 @@ app.use('/posts', postRoutes);
 app.use('/categories', categoryRoutes);
 // Monta le rotte dei tags su /tags
 app.use('/tags', tagRoutes);
+// Registriamo le rotte di autenticazione senza alcun prefisso
+app.use('', authRoutes); 
 
 
 // Middleware per rotte non trovate (404)

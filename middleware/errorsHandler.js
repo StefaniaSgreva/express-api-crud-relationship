@@ -2,10 +2,19 @@
  * Middleware globale per la gestione degli errori.
  */
 function errorsHandler(err, req, res, next) {
-    // Stampa lo stack trace dell'errore per debug
+    // Controlla se l'errore è un SyntaxError causato dal parsing JSON malformato
+    // express.json() genera questo errore quando il corpo della richiesta non è un JSON valido
+    if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
+        // Risponde con codice 400 (Bad Request) e messaggio chiaro per indicare JSON malformato
+        return res.status(400).json({ message: "Malformed JSON", error: "SyntaxError" });
+    }
+    // Altri errori: stampa lo stack trace per debug
     console.error(err.stack);
+
+    // Usa la funzione di invio risposta generica per gestire l'errore
     sendRes(err, res);
 }
+
 
 /**
  * Funzione riutilizzabile per inviare la risposta di errore.
