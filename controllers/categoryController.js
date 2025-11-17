@@ -1,6 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
-const NotFoundException = require('../exceptions/NotFoundException');
+const NotFoundError = require('../exceptions/NotFoundError');
 
 // Recupera tutte le categorie
 async function index(req, res, next) {
@@ -19,7 +19,7 @@ async function show(req, res, next) {
   const id = parseInt(req.params.id);
   try {
     const category = await prisma.category.findUnique({ where: { id } });
-    if (!category) throw new NotFoundException();
+    if (!category) throw new NotFoundError();
     res.json(category);
   } catch (err) {
     next(err);
@@ -43,7 +43,7 @@ async function update(req, res, next) {
   const data = req.body;
   try {
     const category = await prisma.category.findUnique({ where: { id } });
-    if (!category) throw new NotFoundException();
+    if (!category) throw new NotFoundError();
 
     const updatedCategory = await prisma.category.update({
       where: { id },
@@ -60,7 +60,7 @@ async function destroy(req, res, next) {
   const id = parseInt(req.params.id);
   try {
     const category = await prisma.category.findUnique({ where: { id } });
-    if (!category) throw new NotFoundException();
+    if (!category) throw new NotFoundError();
 
     await prisma.category.delete({ where: { id } });
     res.status(204).send();

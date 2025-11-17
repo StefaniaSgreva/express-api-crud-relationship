@@ -1,8 +1,8 @@
-const NotFoundException = require("../exceptions/NotFoundException");
-const { sendRes } = require("./path/to/errorsHandler"); // importa la funzione sendRes
+const NotFoundError = require("../exceptions/NotFoundError");
+const { sendRes } = require("../middleware/errorsHandler"); // importa la funzione sendRes
 
 function routeNotFound(req, res, next) {
-    const notFoundError = new NotFoundException();
+    const notFoundError = new NotFoundError();
     // Usa direttamente sendRes per inviare la risposta 404
     return sendRes(notFoundError, res);
 }

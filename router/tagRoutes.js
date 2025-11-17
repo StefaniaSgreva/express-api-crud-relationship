@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const tagController = require('../controllers/tagController');
 const { body } = require('express-validator');
-const validationMiddleware = require('../middlewares/validationMiddleware');
+const validationMiddleware = require('../middleware/validationMiddleware');
 
 // GET tutti i tag
 router.get('/tags', tagController.index);

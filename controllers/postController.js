@@ -1,6 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-const NotFoundException = require("../exceptions/NotFoundException");
+const NotFoundError = require("../exceptions/NotFoundError");
 
 // Recupera tutti i post (con filtri opzionali) e paginazione + (con categoria e tag)
 async function index(req, res, next) {
@@ -60,7 +60,7 @@ async function show(req, res, next) {
           tags: true
         }
      });
-    if (!post) throw new NotFoundException();
+    if (!post) throw new NotFoundError();
 
     res.json(post);
   } catch (err) {
@@ -87,7 +87,7 @@ async function update(req, res, next) {
         const incomingData = req.body;
 
         const post = await prisma.post.findUnique({ where: { slug } });
-        if (!post) throw new NotFoundException();
+        if (!post) throw new NotFoundError();
 
         // Aggiorna il post con i nuovi dati
         const updatedPost = await prisma.post.update({
@@ -110,7 +110,7 @@ async function destroy(req, res, next) {
       where: { slug },
       include: { tags: true } // carichiamo i tag associati
     });
-    if (!post) throw new NotFoundException();
+    if (!post) throw new NotFoundError();
 
     // Rimuoviamo tutte le relazioni many-to-many con i tag
     await prisma.post.update({

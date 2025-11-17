@@ -1,6 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
-const NotFoundException = require('../exceptions/NotFoundException');
+const NotFoundError = require('../exceptions/NotFoundError');
 
 // Recupera tutti i tag
 async function index(req, res, next) {
@@ -19,7 +19,7 @@ async function show(req, res, next) {
   const id = parseInt(req.params.id);
   try {
     const tag = await prisma.tag.findUnique({ where: { id } });
-    if (!tag) throw new NotFoundException();
+    if (!tag) throw new NotFoundError();
     res.json(tag);
   } catch (err) {
     next(err);
@@ -43,7 +43,7 @@ async function update(req, res, next) {
   const data = req.body;
   try {
     const tag = await prisma.tag.findUnique({ where: { id } });
-    if (!tag) throw new NotFoundException();
+    if (!tag) throw new NotFoundError();
 
     const updatedTag = await prisma.tag.update({
       where: { id },
@@ -60,7 +60,7 @@ async function destroy(req, res, next) {
   const id = parseInt(req.params.id);
   try {
     const tag = await prisma.tag.findUnique({ where: { id } });
-    if (!tag) throw new NotFoundException();
+    if (!tag) throw new NotFoundError();
 
     await prisma.tag.delete({ where: { id } });
     res.status(204).send();

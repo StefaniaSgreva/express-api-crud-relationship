@@ -10,10 +10,10 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 // Rotte
-const postRoutes = require('./routes/postRoutes');
-const categoryRoutes = require('./routes/categoryRoutes');
-const tagRoutes = require('./routes/tagRoutes');
-const authRoutes = require('./routes/authRoutes');
+const postRoutes = require('./router/postRoutes');
+const categoryRoutes = require('./router/categoryRoutes');
+const tagRoutes = require('./router/tagRoutes');
+const authRoutes = require('./router/authRoutes');
 
 // Middleware
 const routeNotFound = require('./middleware/routeNotFound');
