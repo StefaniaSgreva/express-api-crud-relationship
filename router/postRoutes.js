@@ -8,6 +8,7 @@ const postCreate = require('../validations/postCreate');
 // autenticazione JWT
 const authenticateJWT = require('../middleware/authenticateJWT');
 const checkRole = require('../middleware/authRoleHandler');
+const authorizePostOwner = require('../middleware/authorizePostOwner');
 
 // GET /posts
 // // Recupera tutti i post con eventuali filtri
@@ -48,6 +49,7 @@ router.put(
     '/posts/:slug',
      authenticateJWT,
      checkRole(['admin', 'editor']), // Permetti l'accesso a utenti con ruolo 'admin' oppure 'editor'
+     authorizePostOwner,
     body("title")
         .optional()
         .notEmpty({ ignore_whitespace: true }).withMessage('Il titolo è obbligatorio se fornito')
@@ -72,6 +74,6 @@ router.put(
 
 // DELETE /posts/:slug
 // Elimina un post tramite slug
-router.delete('/posts/:slug',  authenticateJWT, checkRole('admin'), postController.destroy);
+router.delete('/posts/:slug',  authenticateJWT, checkRole('admin'), authorizePostOwner, postController.destroy);
 
 module.exports = router;
