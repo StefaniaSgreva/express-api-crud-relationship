@@ -51,3 +51,13 @@ model Tag {
   // Relazione many-to-many con Post
   posts Post[]
 }
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String
+  role      String   @default("user")
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
