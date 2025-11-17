@@ -30,6 +30,10 @@ model Post {
 
   // Relazione many-to-many con Tag
   tags Tag[] // array di tag
+
+  // Relazione one-to-many con User
+  author   User? @relation(fields: [authorId], references: [id])
+  authorId Int?
 }
 
 model Category {
@@ -60,4 +64,7 @@ model User {
   password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  // Post scritti dall'utente (one-to-many)
+  posts Post[]
 }
