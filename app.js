@@ -1,20 +1,30 @@
-const express = require("express");
-const dotenv = require("dotenv");
-dotenv.config();
+// CORS
+const cors = require('cors');
 
+const express = require("express");
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Dotenv
+const dotenv = require("dotenv");
+dotenv.config();
+
+// Rotte
 const postRoutes = require('./routes/postRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const tagRoutes = require('./routes/tagRoutes');
 const authRoutes = require('./routes/authRoutes');
 
+// Middleware
 const routeNotFound = require('./middleware/routeNotFound');
 const errorsHandler = require('./middleware/errorsHandler');
 
-// application/json
-app.use(express.json());
+// CORS: permette richieste da qualunque origine (da usare in sviluppo, da restringere in produzione)
+//  es. produzione: app.use(cors({ origin: 'https://tuodominio.com' })); 
+app.use(cors()); 
+
+// Serve per leggere JSON nel corpo delle richieste
+app.use(express.json()); // Serve per elaborare payload JSON
 
 // Monta le rotte dei post su /posts
 app.use('/posts', postRoutes);
