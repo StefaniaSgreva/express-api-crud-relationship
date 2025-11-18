@@ -117,10 +117,29 @@ async function update(req, res, next) {
         const post = await prisma.post.findUnique({ where: { slug } });
         if (!post) throw new NotFoundError();
 
+        // Non permettere di cambiare l'autore!
+        if ('authorId' in incomingData) delete incomingData.authorId;
+
+        // Gestione tags: puoi ricevere ["tags": [1,2]]
+        let tagsInput = undefined;
+        if (Array.isArray(incomingData.tags)) {
+          tagsInput = {
+            set: incomingData.tags.map(id => ({ id })),
+          };
+          delete incomingData.tags; // rimuovi per evitare errori Prisma
+        }
+
         // Aggiorna il post con i nuovi dati
         const updatedPost = await prisma.post.update({
-            where: { slug },
-            data: incomingData,
+          where: { slug },
+          data: {
+            ...incomingData,
+            ...(tagsInput && { tags: tagsInput }),
+          },
+          include: {
+            category: true,
+            tags: true
+          }
         });
 
         return res.json(updatedPost);
@@ -140,13 +159,21 @@ async function destroy(req, res, next) {
     });
     if (!post) throw new NotFoundError();
 
+    // Controllo permessi: solo admin oppure autore del post
+    if (
+      req.user.role !== 'admin' &&
+      req.user.id !== post.authorId
+    ) {
+      return res.status(403).json({ error: 'You are not authorized to delete this post' });
+    }
+
     // Rimuoviamo tutte le relazioni many-to-many con i tag
     await prisma.post.update({
       where: { slug },
       data: { tags: { set: [] } } 
     });
 
-    // Ora eliminiamo il post in modo sicuro
+    // Elimina il post
     await prisma.post.delete({ where: { slug } });
 
     res.status(204).send();
