@@ -73,7 +73,35 @@ async function store(req, res, next) {
   try {
     const data = req.body;
 
-    const newPost = await prisma.post.create({ data });
+    // Gestione tags relazione molti-a-molti
+    // Se il client invia un array di ids: "tags": [1, 2]
+    let tagsInput = undefined;
+    if (Array.isArray(data.tags) && data.tags.length > 0) {
+      tagsInput = {
+        connect: data.tags.map(id => ({ id })),
+      };
+    }
+
+    // AuthorId dal token JWT 
+    const authorId = req.user.id;
+
+    const newPost = await prisma.post.create({
+      data: {
+        title: data.title,
+        slug: data.slug,
+        content: data.content,
+        categoryId: data.categoryId,
+        published: typeof data.published === 'boolean' ? data.published : false, // o true di default se si vuole pubblicare in automatico
+        authorId, // User loggato
+        // Solo aggiungi il campo tags se è presente
+        ...(tagsInput && { tags: tagsInput }),
+      },
+      include: {
+        category: true,
+        tags: true
+      }
+    });
+
     res.status(201).json(newPost);
   } catch (err) {
     next(err);
