@@ -40,7 +40,9 @@ router.get('/:slug', postController.show);
 //     validationMiddleware,
 //     postController.store
 // );
-router.post("/",  authenticateJWT, checkRole('admin'), checkSchema(postCreate), postController.store);
+
+// router.post("/",  authenticateJWT, checkRole('admin'), checkSchema(postCreate), postController.store);
+router.post("/", authenticateJWT, checkRole(['admin', 'editor', 'user']), checkSchema(postCreate), postController.store);
 
 // PUT /posts/:slug
 // Aggiorna un post tramite slug
@@ -48,8 +50,9 @@ router.post("/",  authenticateJWT, checkRole('admin'), checkSchema(postCreate), 
 router.put(
     '/:slug',
      authenticateJWT,
-     checkRole(['admin', 'editor']), // Permetti l'accesso a utenti con ruolo 'admin' oppure 'editor'
-     authorizePostOwner,
+    checkRole(['admin', 'editor', 'user']), // tutti i ruoli validi
+    authorizePostOwner('update'), // consente se admin, editor, o autore del post
+    // ...validazione campi...
     body("title")
         .optional()
         .notEmpty({ ignore_whitespace: true }).withMessage('Il titolo è obbligatorio se fornito')
@@ -74,6 +77,12 @@ router.put(
 
 // DELETE /posts/:slug
 // Elimina un post tramite slug
-router.delete('/:slug',  authenticateJWT, checkRole('admin'), authorizePostOwner, postController.destroy);
+router.delete(
+  '/:slug',
+  authenticateJWT,
+  checkRole(['admin', 'user']), // tutti i ruoli che vuoi abilitare
+  authorizePostOwner('delete'), // consente delete se admin o autore 
+  postController.destroy
+);
 
 module.exports = router;
