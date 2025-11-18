@@ -12,11 +12,11 @@ const authorizePostOwner = require('../middleware/authorizePostOwner');
 
 // GET /posts
 // // Recupera tutti i post con eventuali filtri
-router.get('/posts', postController.index);
+router.get('/', postController.index);
 
 // GET /posts/:slug
 // Recupera un singolo post tramite slug
-router.get('/posts/:slug', postController.show);
+router.get('/:slug', postController.show);
 
 // POST /posts
 // Crea un nuovo post
@@ -40,13 +40,13 @@ router.get('/posts/:slug', postController.show);
 //     validationMiddleware,
 //     postController.store
 // );
-router.post("/posts",  authenticateJWT, checkRole('admin'), checkSchema(postCreate), postController.store);
+router.post("/",  authenticateJWT, checkRole('admin'), checkSchema(postCreate), postController.store);
 
 // PUT /posts/:slug
 // Aggiorna un post tramite slug
 // router.put('/posts/:slug', postController.update);
 router.put(
-    '/posts/:slug',
+    '/:slug',
      authenticateJWT,
      checkRole(['admin', 'editor']), // Permetti l'accesso a utenti con ruolo 'admin' oppure 'editor'
      authorizePostOwner,
@@ -74,6 +74,6 @@ router.put(
 
 // DELETE /posts/:slug
 // Elimina un post tramite slug
-router.delete('/posts/:slug',  authenticateJWT, checkRole('admin'), authorizePostOwner, postController.destroy);
+router.delete('/:slug',  authenticateJWT, checkRole('admin'), authorizePostOwner, postController.destroy);
 
 module.exports = router;

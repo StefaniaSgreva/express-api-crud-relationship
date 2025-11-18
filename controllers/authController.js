@@ -13,7 +13,10 @@ async function register(req, res, next) {
     sanitizedData.password = await bcrypt.hash(sanitizedData.password, 10);
 
     const user = await prisma.user.create({
-      data: { ...sanitizedData },
+      data: {
+        ...sanitizedData,
+        role: "user", // forza sempre user
+      },
       select: {
         id: true,
         email: true,

@@ -59,5 +59,5 @@ module.exports = {
     },
     errorMessage:
       "La password deve essere lunga almeno 8 caratteri, contenere almeno una lettera minuscola, una maiuscola, un numero e un carattere speciale",
-  },
+  }
 };
