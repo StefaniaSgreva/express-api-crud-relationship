@@ -5,14 +5,14 @@ const { body } = require('express-validator');
 const validationMiddleware = require('../middleware/validationMiddleware');
 
 // GET tutti i tag
-router.get('/tags', tagController.index);
+router.get('/', tagController.index);
 
 // GET tag per ID
-router.get('/tags/:id', tagController.show);
+router.get('/:id', tagController.show);
 
 // POST crea un nuovo tag con validazione
 router.post(
-  '/tags', 
+  '/', 
   body('name')
     .notEmpty({ ignore_whitespace: true }).withMessage('Il nome è obbligatorio')
     .isLength({ max: 50 }).withMessage('Il nome può contenere massimo 50 caratteri'),
@@ -22,7 +22,7 @@ router.post(
 
 // PUT aggiorna tag per ID con validazione
 router.put(
-  '/tags/:id',
+  '/:id',
   body('name')
     .optional()
     .notEmpty({ ignore_whitespace: true }).withMessage('Il nome è obbligatorio se fornito')
@@ -32,6 +32,6 @@ router.put(
 );
 
 // DELETE elimina tag per ID
-router.delete('/tags/:id', tagController.destroy);
+router.delete('/:id', tagController.destroy);
 
 module.exports = router;
